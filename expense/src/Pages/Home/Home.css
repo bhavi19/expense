@@ -1,0 +1,108 @@
+/* Set the height to cover the entire viewport */
+.homepage-container {
+    display: block;
+    justify-content: center;
+    /* Center horizontally */
+    align-items: center;
+    /* Center vertically */
+    height: 25vh;
+    background-color: #f4f4f4;
+    margin-top: 30px;
+    /* height: 160; */
+    /* position: absolute; */
+    background-color: white;
+}
+
+/* Center the content within the container */
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    /* Stack elements vertically */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex: 2;
+    /* Center the text inside the label */
+    /* gap: 15px; */
+    /* Adds space between the label and the icon */
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* .centered-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+  } */
+
+.date-container {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.calendar-div {
+    float: right;
+}
+
+.expense-list {
+    margin-top: 30px;
+    width: 100%;
+    /* Take full width of the container */
+}
+
+.total {
+    text-align: center;
+    width: 100%;
+}
+
+/* Style for the label */
+.label {
+    font-size: 20px;
+    /* Adjust font size */
+    margin: 0;
+    color: #333;
+    /* Dark text color */
+}
+
+/* Style for the plus icon */
+.plus-icon {
+    /* padding-bottom: 15px; */
+    font-size: 30px;
+    /* Size of the plus icon */
+    cursor: pointer;
+    /* Makes the icon clickable */
+    color: #4CAF50;
+    /* Green color for the icon */
+    transition: transform 0.3s ease;
+    /* Optional: smooth scaling effect on hover */
+}
+
+.plus-icon:hover {
+    transform: scale(1.2);
+    /* Enlarge the icon on hover */
+}
+
+.navbar {
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+/* Style the remove icon (trash icon) */
+.bi-dash-circle {
+    font-size: 24px;
+    cursor: pointer;
+    color: orange;
+    margin-left: auto;
+    /* Pushes the icon to the right */
+}
+
+.bi-dash-circle:hover {
+    color: darkorange;
+    /* Hover effect for the remove icon */
+}
