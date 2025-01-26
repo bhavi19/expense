@@ -9,7 +9,7 @@ const AppModal = (props) => {
     const [expenseDescription, setExpenseDescription] = useState("Description")
 
     const handleSubmit = () => {
-        let newData = { expense: expenseAmount, description: expenseDescription }
+        let newData = { expenseAmount: expenseAmount, expenseDescription: expenseDescription, user_id: "6793bcb3a72a1f27902053bd" }
         console.log("newData", newData)
         props.addExpenseData(newData)
         props.handleClose(false)
@@ -26,7 +26,7 @@ const AppModal = (props) => {
                         <Col>
                             <Form.Group controlId="formLastName">
                                 <Form.Label>Expense</Form.Label>
-                                <Form.Control type="text" placeholder="0.00" onChange={(e) => setExpenseAmount(e.target.value)} />
+                                <Form.Control type="number" placeholder="0.00" onChange={(e) => setExpenseAmount(e.target.value)} />
                             </Form.Group>
                         </Col>
                         <Col>
