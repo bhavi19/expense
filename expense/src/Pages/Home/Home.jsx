@@ -4,12 +4,16 @@ import AppModal from '../../Components/Modal/Modal';
 import { addNewExpense, fetchAllExpenses, removeExpense } from '../../Services/api';
 import { Container, Navbar } from 'react-bootstrap';
 import moment from 'moment';
+import withToast from '../../Components/ToastMessage';
 
-const Home = () => {
+const Home = ({ showToastMessage }) => {
     const [openModal, setOpenModal] = useState(false);
     const [expenseData, setExpenseData] = useState([])
     const [total, setTotal] = useState(0.0)
     const [loading, setLoading] = useState(true)
+
+    const [date, setDate] = useState(new Date());
+
     useEffect(() => {
         fetchExpenses()
     }, [openModal])
@@ -37,11 +41,12 @@ const Home = () => {
             data = await fetchAllExpenses("6793bcb3a72a1f27902053bd")
             setExpenseData(data.expenseData)
             setLoading(false)
+            showToastMessage('API call was successful!', 'success');
+
             // <ToastMessage/>
         } catch (error) {
             window.alert("error occured")
         }
-        console.log(expenseData)
     }
 
     const addExpenseData = async (data) => {
@@ -55,14 +60,13 @@ const Home = () => {
     }
 
     const renderList = () => {
-        console.log("expensedata:", expenseData)
         let renderedLists = expenseData.map((item, index) => {
             return (<>
-                <Navbar className="bg-body-tertiary">
+                <Navbar className="bg-body-tertiary" key={index}>
                     <Container>
-                        <Navbar.Brand href="#home" key={index}>
+                        <Navbar.Brand href="#home">
                             {parseFloat(item.expenseAmount)} - {item.expenseDescription} </Navbar.Brand>
-                        <i class="bi bi-dash-circle" onClick={() => handleRemoveExpense(item._id)}></i>
+                        <i className="bi bi-dash-circle" onClick={() => handleRemoveExpense(item._id)}></i>
                     </Container>
                 </Navbar>
                 <br />
@@ -85,7 +89,18 @@ const Home = () => {
                     <i className="bi bi-plus-circle plus-icon" onClick={() => setOpenModal(true)}></i>
                 </div>
                 <div className="date-container">
+
                     <label><b>{moment(Date.now()).format("DD MMMM YYYY")}</b></label>
+                    {/* <label>
+                        <DatePicker
+                            selected={date}
+                            onChange={(date) => setDate(date)}
+                            minDate={new Date()}
+                            className="form-control"
+                            dateFormat="MMMM d, yyyy"
+                            calendarClassName="custom-calendar"
+                        />
+                    </label> */}
                     <br />
                     <label >{moment(Date.now()).format("dddd")}</label>
                 </div>
@@ -101,4 +116,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default withToast(Home);

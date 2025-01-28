@@ -10,7 +10,6 @@ const AppModal = (props) => {
 
     const handleSubmit = () => {
         let newData = { expenseAmount: expenseAmount, expenseDescription: expenseDescription, user_id: "6793bcb3a72a1f27902053bd" }
-        console.log("newData", newData)
         props.addExpenseData(newData)
         props.handleClose(false)
     }

@@ -1,16 +1,37 @@
-import Toast from 'react-bootstrap/Toast';
+import React, { useState } from 'react';
+import { Toast, ToastContainer } from 'react-bootstrap';
 
-const ToastMessage = () =>{
-    return (
-        <Toast>
-            <Toast.Header>
-                <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
-                <strong className="me-auto">Bootstrap</strong>
-                <small>11 mins ago</small>
-            </Toast.Header>
-            <Toast.Body>Hello, world! This is a toast message.</Toast.Body>
-        </Toast>
-    );
-}
+const withToast = (WrappedComponent) => {
+    return (props) => {
+        const [showToast, setShowToast] = useState(false);
+        const [toastMessage, setToastMessage] = useState('');
+        const [toastType, setToastType] = useState('success'); // You can customize this for different types like error, info, etc.
 
-export default ToastMessage;
+        const showToastMessage = (message, type = 'success') => {
+            setToastMessage(message);
+            setToastType(type);
+            setShowToast(true);
+
+            setTimeout(() => {
+                setShowToast(false);
+            }, 3000); // Auto-hide after 3 seconds
+        };
+
+        return (
+            <>
+                <WrappedComponent {...props} showToastMessage={showToastMessage} />
+
+                <ToastContainer position="top-end">
+                    <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
+                        <Toast.Header>
+                            <strong className="me-auto">{toastType === 'success' ? 'Success' : 'Error'}</strong>
+                        </Toast.Header>
+                        <Toast.Body>{toastMessage}</Toast.Body>
+                    </Toast>
+                </ToastContainer>
+            </>
+        );
+    };
+};
+
+export default withToast;

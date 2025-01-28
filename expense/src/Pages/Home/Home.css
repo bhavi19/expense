@@ -10,7 +10,9 @@
     margin-top: 30px;
     /* height: 160; */
     /* position: absolute; */
+    padding: 10px 10px;
     background-color: white;
+    /* border: #333; */
 }
 
 /* Center the content within the container */
@@ -25,6 +27,9 @@
     /* Center the text inside the label */
     /* gap: 15px; */
     /* Adds space between the label and the icon */
+}
+.date-picker{
+    border: none;
 }
 
 .container {
@@ -67,6 +72,7 @@
     /* Adjust font size */
     margin: 0;
     color: #333;
+    margin-top: 10px;
     /* Dark text color */
 }
 
