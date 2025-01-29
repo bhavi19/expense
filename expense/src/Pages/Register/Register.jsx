@@ -1,12 +1,17 @@
 // src/LoginPage.js
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import ReCAPTCHA from 'react-recaptcha';
 import './Register.css';
 import { registerUser } from '../../Services/api';
 import withToast from '../../Components/ToastMessage';
+import { useNavigate } from 'react-router';
+import { UserContext } from '../../Contexts/UserContext';
 
 const RegisterPage = ({ showToastMessage }) => {
+    const navigate = useNavigate()
+    const { login } = useContext(UserContext);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
@@ -28,10 +33,26 @@ const RegisterPage = ({ showToastMessage }) => {
             name: name
         }
 
-        registerUser(data).then((res) => {
-            console.log(res)
-            showToastMessage('API call was successful!', 'success');
-        })
+        try {
+            registerUser(data).then((res) => {
+                console.log(res)
+
+                localStorage.setItem('token', res.token);
+                localStorage.setItem('user', JSON.stringify(res.user));;
+                localStorage.setItem('isAuthenticated', true);
+                showToastMessage('Welcome username!', 'success')
+                login(res.user);
+                navigate('/')
+
+            })
+
+        } catch (error) {
+            console.log(error)
+            showToastMessage('Failed to register. ', 'error');
+        }
+
+
+
 
 
     };
@@ -46,7 +67,7 @@ const RegisterPage = ({ showToastMessage }) => {
         <div className='form-container'>
             <div className="login-container">
                 <form className="login-form" onSubmit={handleSubmit} style={{ padding: "30px" }}>
-                    <h2>Let's start your journey</h2>
+                    <h2>Register here...</h2>
                     <div className="input-group">
                         <label htmlFor="name">Name</label>
                         <input

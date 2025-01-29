@@ -1,21 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './Header.css';
 import { Dropdown } from 'react-bootstrap'
 import { useNavigate } from 'react-router';
 import { useLocation } from 'react-router-dom';
+import { UserContext } from '../../Contexts/UserContext';
 
 
 const Header = () => {
+    const { user, isAuthenticated, logout } = useContext(UserContext);
     const navigate = useNavigate()
     const location = useLocation();
-
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         localStorage.removeItem('isAuthenticated');
-
+        logout()
         navigate('/signin')
     }
     return (
@@ -29,7 +29,7 @@ const Header = () => {
                     <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic" style={{ backgroundColor: 'transparent', border: 'none' }}>
                             <i className="bi bi-person-circle profile-icon"></i>
-                            <label> Bhavika Vyas</label>
+                            <label> {user.name}</label>
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>

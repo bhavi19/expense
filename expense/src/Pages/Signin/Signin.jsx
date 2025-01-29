@@ -1,15 +1,19 @@
 // src/LoginPage.js
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import ReCAPTCHA from 'react-recaptcha';
 import './Signin.css';
 import { signinUser } from '../../Services/api';
 import { useNavigate } from 'react-router';
 import withToast from '../../Components/ToastMessage';
+import { UserContext } from '../../Contexts/UserContext'
+
 
 
 const LoginPage = ({ showToastMessage }) => {
     const navigate = useNavigate();
+    const { login } = useContext(UserContext);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [recaptchaVerified, setRecaptchaVerified] = useState(false);
@@ -28,18 +32,19 @@ const LoginPage = ({ showToastMessage }) => {
             password: password,
             // name: name
         }
-
-        signinUser(data).then((res) => {
-            console.log(res)
-            localStorage.setItem('token', res.token);
-            localStorage.setItem('user', JSON.stringify(res.user));;
-            localStorage.setItem('isAuthenticated', true);
-            // window.alert(res.message)
-            // navigate('/')
-            showToastMessage('API call was successful!', 'success');
-
-        })
-
+        try {
+            signinUser(data).then((res) => {
+                login(res.user); // Update the context with the signed-in user data
+                localStorage.setItem('token', res.token);
+                localStorage.setItem('user', JSON.stringify(res.user));;
+                localStorage.setItem('isAuthenticated', true);
+                showToastMessage('Logged in successfully.', 'success')
+                navigate('/')
+            })
+        } catch (error) {
+            console.log(error)
+            showToastMessage('Failed to login. ', 'error');
+        }
     };
 
     const handleRecaptchaChange = (value) => {

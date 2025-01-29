@@ -22,10 +22,13 @@ const withToast = (WrappedComponent) => {
                 <WrappedComponent {...props} showToastMessage={showToastMessage} />
 
                 <ToastContainer position="top-end">
-                    <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
-                        <Toast.Header>
+                    <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000}
+                        bg={toastType === 'success' ? 'success' : 'danger'} // Red for error, green for success
+
+                        autohide>
+                        {/* <Toast.Header>
                             <strong className="me-auto">{toastType === 'success' ? 'Success' : 'Error'}</strong>
-                        </Toast.Header>
+                        </Toast.Header> */}
                         <Toast.Body>{toastMessage}</Toast.Body>
                     </Toast>
                 </ToastContainer>

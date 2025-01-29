@@ -12,6 +12,8 @@
     /* position: absolute; */
     padding: 10px 10px;
     background-color: white;
+    margin: 15px 100px;
+    padding: 40px;
     /* border: #333; */
 }
 
@@ -24,11 +26,14 @@
     align-items: center;
     text-align: center;
     flex: 2;
+    padding-left: 100px;
+    /* position: fixed; */
     /* Center the text inside the label */
     /* gap: 15px; */
     /* Adds space between the label and the icon */
 }
-.date-picker{
+
+.date-picker {
     border: none;
 }
 
@@ -49,6 +54,8 @@
 .date-container {
     text-align: right;
     flex-shrink: 0;
+    width: 160px;
+    /* width: 10px; */
 }
 
 .calendar-div {
@@ -56,14 +63,18 @@
 }
 
 .expense-list {
+    justify-content: center;
     margin-top: 30px;
     width: 100%;
+    padding: 10px 30px;
+    /* margin: 40px; */
     /* Take full width of the container */
 }
 
 .total {
     text-align: center;
     width: 100%;
+    color: #A390F3;
 }
 
 /* Style for the label */
@@ -111,4 +122,77 @@
 .bi-dash-circle:hover {
     color: darkorange;
     /* Hover effect for the remove icon */
+}
+
+.view-container {
+    background-color: transparent;
+    color: #A390F3;
+    width: 40px;
+    margin: 10px;
+    padding: 0px 10px;
+}
+
+
+/* Custom CSS for DatePicker */
+
+/* Style the date picker input */
+.custom-datepicker {
+    border: none;
+    /* No border */
+    background-color: transparent;
+    /* Custom background color */
+    color: #A390F3;
+    /* Text color */
+    padding: 10px;
+    /* Add padding */
+    font-size: 16px;
+    /* Font size */
+    border-radius: 5px;
+    /* Optional: rounded corners */
+    padding-left: 20px;
+}
+
+/* Style the calendar dropdown */
+.react-datepicker__triangle {
+    display: none;
+    /* Hide the triangle indicator */
+}
+
+.react-datepicker__header {
+    font-weight: bold;
+
+    background-color: #A390F3;
+    /* Header background color */
+    border: none;
+    /* No border for the header */
+    color: white;
+    /* Text color */
+}
+
+.react-datepicker__current-month {
+    font-size: 18px;
+    /* Larger font for the current month */
+    font-weight: bold;
+}
+
+/* Style the calendar date cells */
+.react-datepicker__day {
+    background-color: transparent;
+    /* Transparent background for day cells */
+    color: #333;
+    /* Default text color for dates */
+}
+
+.react-datepicker__day:hover {
+    background-color: #A390F3;
+    /* Hover effect for date cells */
+    color: white;
+    /* Text color on hover */
+}
+
+.react-datepicker__day--today {
+    background-color: #A390F3;
+    /* Highlight today's date */
+    color: white;
+    /* Text color for today's date */
 }

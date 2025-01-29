@@ -1,18 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './Home.css'; // Import the CSS file for styling
 import AppModal from '../../Components/Modal/Modal';
 import { addNewExpense, fetchAllExpenses, removeExpense } from '../../Services/api';
-import { Container, Navbar } from 'react-bootstrap';
+import { Container, Dropdown, DropdownButton, Form, Navbar } from 'react-bootstrap';
 import moment from 'moment';
 import withToast from '../../Components/ToastMessage';
+import "react-datepicker/dist/react-datepicker.css"; // Import default styles
+import DatePicker from 'react-datepicker';
+
+import { UserContext } from '../../Contexts/UserContext';
 
 const Home = ({ showToastMessage }) => {
     const [openModal, setOpenModal] = useState(false);
     const [expenseData, setExpenseData] = useState([])
     const [total, setTotal] = useState(0.0)
     const [loading, setLoading] = useState(true)
+    const [selectedOption, setSelectedOption] = useState('Daily'); // Default to 'Daily'
 
-    const [date, setDate] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState(new Date()); // Pre-select today's date
+
+    const { user, isAuthenticated, signOut } = useContext(UserContext);
+    console.log("context:", user, isAuthenticated)
+
 
     useEffect(() => {
         fetchExpenses()
@@ -38,19 +47,21 @@ const Home = ({ showToastMessage }) => {
     const fetchExpenses = async () => {
         let data
         try {
-            data = await fetchAllExpenses("6793bcb3a72a1f27902053bd")
+            data = await fetchAllExpenses(user._id)
             setExpenseData(data.expenseData)
             setLoading(false)
-            showToastMessage('API call was successful!', 'success');
+            // showToastMessage('API call was successful!', 'success');
 
             // <ToastMessage/>
         } catch (error) {
-            window.alert("error occured")
+            console.log("error", error)
+            // window.alert("error occured")
         }
     }
 
     const addExpenseData = async (data) => {
-        await addNewExpense(data)
+        console.log("data", data)
+        await addNewExpense({ ...data, user_id: user._id })
         await fetchExpenses()
     }
 
@@ -58,6 +69,11 @@ const Home = ({ showToastMessage }) => {
         await removeExpense(id)
         fetchExpenses()
     }
+
+    const handleSelect = (eventKey) => {
+        setSelectedOption(eventKey); // Update the selected option
+    };
+
 
     const renderList = () => {
         let renderedLists = expenseData.map((item, index) => {
@@ -79,8 +95,21 @@ const Home = ({ showToastMessage }) => {
     return (
         <div className="homepage-container">
             <div className="container">
-                <div className="date-container">
-                    <label><b>Something goes here</b></label>
+                <div className="view-container">
+
+                    <Dropdown onSelect={handleSelect}>
+                        <Dropdown.Toggle variant="success" id="dropdown-custom-components">
+                            {selectedOption} {/* Display the selected option */}
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Dropdown.Item eventKey="Daily">Daily</Dropdown.Item>
+                            <Dropdown.Item eventKey="Weekly">Weekly</Dropdown.Item>
+                            <Dropdown.Item eventKey="Monthly">Monthly</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+
+                    {/* <label><b>Something goes here</b></label> */}
                     <br />
                     {/* <label >{moment(Date.now()).format("dddd")}</label> */}
                 </div>
@@ -88,9 +117,23 @@ const Home = ({ showToastMessage }) => {
                     <label className="label"><b>Add aaj ka kharcha</b></label>
                     <i className="bi bi-plus-circle plus-icon" onClick={() => setOpenModal(true)}></i>
                 </div>
-                <div className="date-container">
 
-                    <label><b>{moment(Date.now()).format("DD MMMM YYYY")}</b></label>
+
+                <div className="date-container">
+                    <Form.Group>
+                        {/* <Form.Label>Select Date</Form.Label> */}
+                        <DatePicker
+                            portalId="root-portal"
+
+                            selected={selectedDate}
+                            onChange={(date) => setSelectedDate(date)} // Update the selected date
+                            dateFormat="MMMM d, yyyy"
+                            className="custom-datepicker" // Custom class for styling
+                            todayButton="Today" // Add a button for today
+                        />
+                    </Form.Group>
+
+                    {/* <label><b>{moment(Date.now()).format("DD MMMM YYYY")}</b></label> */}
                     {/* <label>
                         <DatePicker
                             selected={date}
@@ -102,7 +145,7 @@ const Home = ({ showToastMessage }) => {
                         />
                     </label> */}
                     <br />
-                    <label >{moment(Date.now()).format("dddd")}</label>
+                    {/* <label >{moment(Date.now()).format("dddd")}</label> */}
                 </div>
             </div>
             <hr />

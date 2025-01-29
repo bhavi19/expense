@@ -31,7 +31,7 @@
 }
 
 .label-style {
-    color: rgb(163, 144, 243);
+    color: #A390F3;
     font-weight: bold;
     text-align: center;
     padding-top: 20px;
@@ -40,7 +40,7 @@
 h2 {
     text-align: center;
     margin-bottom: 40px;
-    color: rgb(163, 144, 243);
+    color: #A390F3
 }
 
 .input-group {
@@ -68,7 +68,7 @@ h2 {
 .submit-btn {
     width: 100%;
     padding: 12px;
-    background-color: rgb(163, 144, 243);
+    background-color: #A390F3;
     color: white;
     border: none;
     border-radius: 4px;
@@ -78,9 +78,9 @@ h2 {
 }
 
 .submit-btn:hover {
-    background-color: rgb(123, 104, 243);
+    background-color: #A390F3;
 }
 
 .submit-btn:active {
-    background-color: rgb(103, 84, 243);
+    background-color: #A390F3;
 }
