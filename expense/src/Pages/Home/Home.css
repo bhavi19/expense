@@ -26,7 +26,7 @@
     align-items: center;
     text-align: center;
     flex: 2;
-    padding-left: 100px;
+    padding-left: 105px;
     /* position: fixed; */
     /* Center the text inside the label */
     /* gap: 15px; */
@@ -63,10 +63,16 @@
 }
 
 .expense-list {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    margin-top: 30px;
+    align-items: center;
+    text-align: center;
+    margin-top: 10px;
     width: 100%;
     padding: 10px 30px;
+    flex: 2;
+    /* padding-left: 60px; */
     /* margin: 40px; */
     /* Take full width of the container */
 }
@@ -195,4 +201,11 @@
     /* Highlight today's date */
     color: white;
     /* Text color for today's date */
+}
+
+.day-label {
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    padding-right: 18px;
 }

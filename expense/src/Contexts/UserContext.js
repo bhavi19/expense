@@ -5,8 +5,8 @@ export const UserContext = createContext();
 
 
 export const UserProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
+    const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('user') ? true : false);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');

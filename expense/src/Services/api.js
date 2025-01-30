@@ -18,6 +18,16 @@ export const fetchAllExpenses = async (id) => {
     }
 };
 
+export const fetchAllDayExpenses = async (id, date) => {
+    try {
+        const response = await instance.get(`expenses/expenses/day/${id}/${date}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+        throw error;
+    }
+};
+
 export const addNewExpense = async (payload) => {
     try {
         const response = await instance.post('expenses/new', payload);

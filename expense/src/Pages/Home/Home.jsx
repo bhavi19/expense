@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import './Home.css'; // Import the CSS file for styling
 import AppModal from '../../Components/Modal/Modal';
-import { addNewExpense, fetchAllExpenses, removeExpense } from '../../Services/api';
-import { Container, Dropdown, DropdownButton, Form, Navbar } from 'react-bootstrap';
+import { addNewExpense, fetchAllDayExpenses, fetchAllExpenses, removeExpense } from '../../Services/api';
+import { Container, Dropdown, Form, Navbar } from 'react-bootstrap';
 import moment from 'moment';
 import withToast from '../../Components/ToastMessage';
 import "react-datepicker/dist/react-datepicker.css"; // Import default styles
@@ -19,22 +19,23 @@ const Home = ({ showToastMessage }) => {
 
     const [selectedDate, setSelectedDate] = useState(new Date()); // Pre-select today's date
 
-    const { user, isAuthenticated, signOut } = useContext(UserContext);
-    console.log("context:", user, isAuthenticated)
+    const { user } = useContext(UserContext);
 
+    console.log("user", user)
 
     useEffect(() => {
         fetchExpenses()
-    }, [openModal])
+    }, [selectedOption, selectedDate])
 
     useEffect(() => {
-        renderList()
-    }, [expenseData, loading])
+        countTotal()
+    }, [expenseData])
 
-    useEffect(() => {
-        let expenseDetails = expenseData
+    const countTotal = async () => {
+        console.log("expenseData", expenseData)
+        let expenseDetails = await expenseData
         let sum = 0;
-        if (expenseData.length) {
+        if (expenseData?.length) {
             for (let i = 0; i < expenseDetails.length; i++) {
                 sum += parseFloat(expenseDetails[i].expenseAmount);
             }
@@ -42,26 +43,37 @@ const Home = ({ showToastMessage }) => {
         } else {
             setTotal(0)
         }
-    }, [expenseData])
+    }
 
     const fetchExpenses = async () => {
         let data
-        try {
-            data = await fetchAllExpenses(user._id)
-            setExpenseData(data.expenseData)
-            setLoading(false)
-            // showToastMessage('API call was successful!', 'success');
+        if (selectedOption === 'Daily') {
 
-            // <ToastMessage/>
-        } catch (error) {
-            console.log("error", error)
-            // window.alert("error occured")
+            try {
+                data = await fetchAllDayExpenses(user._id, moment(selectedDate).format("YYYY-MM-DD"))
+                setExpenseData(data.filteredData)
+                countTotal()
+                setLoading(false)
+            } catch (error) {
+                console.log("error", error)
+            }
+        } else {
+            try {
+                data = await fetchAllExpenses(user._id)
+                setExpenseData(data.expenseData)
+                countTotal()
+                setLoading(false)
+            } catch (error) {
+                console.log("error", error)
+                // window.alert("error occured")
+            }
         }
+        return data
     }
 
     const addExpenseData = async (data) => {
         console.log("data", data)
-        await addNewExpense({ ...data, user_id: user._id })
+        await addNewExpense({ ...data, user_id: user._id, date: selectedDate })
         await fetchExpenses()
     }
 
@@ -71,25 +83,12 @@ const Home = ({ showToastMessage }) => {
     }
 
     const handleSelect = (eventKey) => {
-        setSelectedOption(eventKey); // Update the selected option
+        setSelectedOption(eventKey);
+        //if monthly selected change selected date to today
+        setSelectedDate(moment().toDate())
     };
 
-
-    const renderList = () => {
-        let renderedLists = expenseData.map((item, index) => {
-            return (<>
-                <Navbar className="bg-body-tertiary" key={index}>
-                    <Container>
-                        <Navbar.Brand href="#home">
-                            {parseFloat(item.expenseAmount)} - {item.expenseDescription} </Navbar.Brand>
-                        <i className="bi bi-dash-circle" onClick={() => handleRemoveExpense(item._id)}></i>
-                    </Container>
-                </Navbar>
-                <br />
-            </>)
-        })
-        return renderedLists
-    }
+    let label = selectedOption === 'Daily' ? 'Add aaj ka kharcha' : (selectedOption === 'Monthly' ? 'Monthly Kharcha' : 'Weekly Kharcha')
 
 
     return (
@@ -99,7 +98,7 @@ const Home = ({ showToastMessage }) => {
 
                     <Dropdown onSelect={handleSelect}>
                         <Dropdown.Toggle variant="success" id="dropdown-custom-components">
-                            {selectedOption} {/* Display the selected option */}
+                            {selectedOption}
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>
@@ -114,38 +113,30 @@ const Home = ({ showToastMessage }) => {
                     {/* <label >{moment(Date.now()).format("dddd")}</label> */}
                 </div>
                 <div className="centered-content">
-                    <label className="label"><b>Add aaj ka kharcha</b></label>
+                    <label className="label"><b>{label}</b></label>
                     <i className="bi bi-plus-circle plus-icon" onClick={() => setOpenModal(true)}></i>
                 </div>
 
 
                 <div className="date-container">
                     <Form.Group>
-                        {/* <Form.Label>Select Date</Form.Label> */}
-                        <DatePicker
-                            portalId="root-portal"
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <i class="bi bi-calendar" style={{ color: '#A390F3' }}></i>
+                            <DatePicker
+                                portalId="root-portal"
+                                selected={selectedDate}
+                                maxDate={moment().toDate()}
+                                icon={<i class="bi bi-calendar" style={{ color: '#A390F3' }}></i>}
+                                onChange={(date) => setSelectedDate(date)} // Update the selected date
+                                dateFormat="MMMM d, yyyy"
+                                className="custom-datepicker" // Custom class for styling
+                                todayButton="Today" // Add a button for today
+                            />
+                        </div>
 
-                            selected={selectedDate}
-                            onChange={(date) => setSelectedDate(date)} // Update the selected date
-                            dateFormat="MMMM d, yyyy"
-                            className="custom-datepicker" // Custom class for styling
-                            todayButton="Today" // Add a button for today
-                        />
+                        <label className='day-label'><b>{moment(selectedDate).format("dddd")}</b></label>
+
                     </Form.Group>
-
-                    {/* <label><b>{moment(Date.now()).format("DD MMMM YYYY")}</b></label> */}
-                    {/* <label>
-                        <DatePicker
-                            selected={date}
-                            onChange={(date) => setDate(date)}
-                            minDate={new Date()}
-                            className="form-control"
-                            dateFormat="MMMM d, yyyy"
-                            calendarClassName="custom-calendar"
-                        />
-                    </label> */}
-                    <br />
-                    {/* <label >{moment(Date.now()).format("dddd")}</label> */}
                 </div>
             </div>
             <hr />
@@ -153,7 +144,27 @@ const Home = ({ showToastMessage }) => {
             <div className="total"> <h2>Total : {total}</h2></div>
 
             <div className="expense-list">
-                {renderList()}
+                {expenseData ? expenseData.map((item, index) => {
+                    return (<>
+                        <Navbar className="bg-body-tertiar" style={{ marginBottom: '-15px', width: '90%' }} key={index}>
+                            <Container>
+                                <Navbar.Brand href="#home">
+
+                                    {/* <div>
+                                    <label className='day-label'><b>{moment(selectedDate).format("MMM")}</b></label>
+
+                                    </div> */}
+                                    {parseFloat(item.expenseAmount)} - {item.expenseDescription} </Navbar.Brand>
+
+                                {/* <Navbar.Date>{moment(item.date).format("MMMM Do YYYY")}</Navbar.Date> */}
+                                {/* <label style={{float:'left'}}>{moment(item.date).format("MMMM Do YYYY")}</label> */}
+                                <i className="bi bi-dash-circle" onClick={() => handleRemoveExpense(item._id)}></i>
+
+                            </Container>
+                        </Navbar>
+                        <br />
+                    </>)
+                }) : null}
             </div>
         </div>
     );
