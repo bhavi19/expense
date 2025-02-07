@@ -7,8 +7,9 @@ import moment from 'moment';
 import withToast from '../../Components/ToastMessage';
 import "react-datepicker/dist/react-datepicker.css"; // Import default styles
 import DatePicker from 'react-datepicker';
-
 import { UserContext } from '../../Contexts/UserContext';
+import ExpenseNavBar from '../../Components/Home/ExpenseNavbar/ExpenseNavBar';
+import ViewDropDown from '../../Components/Home/ViewDropDown/ViewDropdDown';
 
 const Home = ({ showToastMessage }) => {
     const [openModal, setOpenModal] = useState(false);
@@ -96,17 +97,7 @@ const Home = ({ showToastMessage }) => {
             <div className="container">
                 <div className="view-container">
 
-                    <Dropdown onSelect={handleSelect}>
-                        <Dropdown.Toggle variant="success" id="dropdown-custom-components">
-                            {selectedOption}
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            <Dropdown.Item eventKey="Daily">Daily</Dropdown.Item>
-                            <Dropdown.Item eventKey="Weekly">Weekly</Dropdown.Item>
-                            <Dropdown.Item eventKey="Monthly">Monthly</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                    <ViewDropDown handleSelect={handleSelect} selectedOption={selectedOption}/>
 
                     {/* <label><b>Something goes here</b></label> */}
                     <br />
@@ -145,25 +136,9 @@ const Home = ({ showToastMessage }) => {
 
             <div className="expense-list">
                 {expenseData ? expenseData.map((item, index) => {
-                    return (<>
-                        <Navbar className="bg-body-tertiar" style={{ marginBottom: '-15px', width: '90%' }} key={index}>
-                            <Container>
-                                <Navbar.Brand href="#home">
-
-                                    {/* <div>
-                                    <label className='day-label'><b>{moment(selectedDate).format("MMM")}</b></label>
-
-                                    </div> */}
-                                    {parseFloat(item.expenseAmount)} - {item.expenseDescription} </Navbar.Brand>
-
-                                {/* <Navbar.Date>{moment(item.date).format("MMMM Do YYYY")}</Navbar.Date> */}
-                                {/* <label style={{float:'left'}}>{moment(item.date).format("MMMM Do YYYY")}</label> */}
-                                <i className="bi bi-dash-circle" onClick={() => handleRemoveExpense(item._id)}></i>
-
-                            </Container>
-                        </Navbar>
-                        <br />
-                    </>)
+                    return (
+                        <ExpenseNavBar index={index} item={item} handleRemoveExpense={handleRemoveExpense} />
+                    )
                 }) : null}
             </div>
         </div>

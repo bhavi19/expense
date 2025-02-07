@@ -6,7 +6,7 @@ const Layout = (props) => {
     return (
         <React.Fragment>
             <Header />
-            <div style={{ paddingTop: "20px" }}>
+            <div style={{ paddingTop: "50px" }}>
                 {props.children}
             </div>
         </React.Fragment>)
